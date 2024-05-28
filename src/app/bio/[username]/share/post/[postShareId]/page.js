@@ -270,10 +270,13 @@ const Page = () => {
         { rel: 'icon', type: 'image/ico', href: '/favicon.ico' }
       ],
       openGraph: {
-        title: `FlipBio: ${description}`,
+        url: postUrl,
+        type: 'article',
         image: photos && Object.keys(photos).length > 0 ?
           `https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/${encodeURIComponent(photos[Object.keys(photos)[0]])}?alt=media` :
           'https://www.flipbio.co/flipbio-logo-square.png',
+        logo: 'https://www.flipbio.co/flipbio-logo-square.png',
+        title: `FlipBio: ${description}`,
         site_name: `FlipBio: ${description}`,
       }
     },

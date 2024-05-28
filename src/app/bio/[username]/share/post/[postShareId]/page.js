@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation'
-import { useMetaTags } from 'react-metatags-hook';
+import { NextSeo } from 'next-seo';
+import { usePathname } from 'next/navigation';
 import { ref as sRef, getBytes } from 'firebase/storage';
 import { fbdb, fbStorage } from '../../../../../../common/utils/firebase';
 import {
@@ -253,36 +253,6 @@ const Page = () => {
     }
   }
 
-  useMetaTags(
-    {
-      title: `FlipBio: ${description}`,
-      description: description,
-      charset: 'utf8',
-      lang: 'en',
-      metas: [
-        { name: 'keywords', content: 'flipbio, microblog, blog, article, sharing' },
-        { name: 'robots', content: 'index, follow' },
-        { name: 'url', content: postUrl },
-        { 'http-equiv': 'Cache-Control', 'content': 'no-cache' },
-      ],
-      links: [
-        { rel: 'canonical', href: 'https://flipbio.co' },
-        { rel: 'icon', type: 'image/ico', href: '/favicon.ico' }
-      ],
-      openGraph: {
-        url: postUrl,
-        type: 'article',
-        image: photos && Object.keys(photos).length > 0 ?
-          `https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/${encodeURIComponent(photos[Object.keys(photos)[0]])}?alt=media` :
-          'https://www.flipbio.co/flipbio-logo-square.png',
-        logo: 'https://www.flipbio.co/flipbio-logo-square.png',
-        title: `FlipBio: ${description}`,
-        site_name: `FlipBio: ${description}`,
-      }
-    },
-    [postId, postUrl]
-  );
-
   useEffect(() => {
     if (!postLoaded) {
       const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
@@ -306,6 +276,32 @@ const Page = () => {
 
   return (
     <>
+      <NextSeo
+        title={`FlipBio: ${description}`}
+        description={description}
+        canonical={photos && Object.keys(photos).length > 0 ?
+          `https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/${encodeURIComponent(photos[Object.keys(photos)[0]])}?alt=media` :
+          'https://www.flipbio.co/flipbio-logo-square.png'}
+        openGraph={{
+          url: postUrl,
+          title: `FlipBio: ${description}`,
+          description: description,
+          images: [
+            {
+              url: photos && Object.keys(photos).length > 0 ?
+              `https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/${encodeURIComponent(photos[Object.keys(photos)[0]])}?alt=media` :
+              'https://www.flipbio.co/flipbio-logo-square.png',
+              alt: `FlipBio: ${description}`
+            }
+          ],
+          site_name: 'FlipBio: Sharing made easy...'
+        }}
+        twitter={{
+          handle: '@handle',
+          site: '@site',
+          cardType: 'summary_large_image',
+        }}
+      />
       <Layout style={{background: 'initial'}}>
         <Content>
           <div className="container-xxl main-container">

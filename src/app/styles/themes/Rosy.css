@@ -1,0 +1,39 @@
+body.rosy {
+  background: #ecdede;
+}
+
+.rosy .main-box.profile {
+  width: 85%;
+  background: #481818;
+  margin: 0 auto 0 auto;
+  padding: 35px 0 40px 0;
+  border-radius: 5px;
+}
+
+.rosy .main-box.profile .send-message,
+.rosy .main-box.profile .sign-in {
+  color: rgba(255,255, 255, 0.7);
+  font-size: 15px !important;
+  background: #541d1d;
+}
+
+.rosy .main-box.profile .send-message:hover,
+.rosy .main-box.profile .sign-in:hover {
+  color: rgba(255,255, 255, 1);
+}
+
+.rosy .website .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+  background: #ecdede;
+}
+
+.rosy .website .ant-input.ant-input-lg.ant-input-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-left: 0;
+  border-radius: 0;
+  background: #ecdede;
+  color: #000000;
+}
+
+.rosy .camera-background {
+  background: #ecdede;
+}

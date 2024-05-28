@@ -1,0 +1,39 @@
+body.light {
+  background: #ffffff;
+}
+
+.light .main-box.profile {
+  width: 85%;
+  background: #77878B;
+  margin: 0 auto 0 auto;
+  padding: 35px 0 40px 0;
+  border-radius: 5px;
+}
+
+.light .main-box.profile .send-message,
+.light .main-box.profile .sign-in {
+  color: rgba(255,255, 255, 0.7);
+  font-size: 15px !important;
+  background: #7b8c91;
+}
+
+.light .main-box.profile .send-message:hover,
+.light .main-box.profile .sign-in:hover {
+  color: rgba(255,255, 255, 1);
+}
+
+.light .website .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+  background: #ffffff;
+}
+
+.light .website .ant-input.ant-input-lg.ant-input-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-left: 0;
+  border-radius: 0;
+  background: #ffffff;
+  color: #000000;
+}
+
+.light .camera-background {
+  background: #fff;
+}

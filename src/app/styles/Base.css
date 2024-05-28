@@ -1,0 +1,200 @@
+.base-theme h2 {
+  font-size: 50px;
+}
+
+.base-theme h3 {
+  font-size: 29px;
+  line-height: 29px;
+}
+
+.base-theme .date {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.base-theme .button {
+  background: #000000;
+  padding: 8px 18px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.base-theme .button.small {
+  margin: 25px auto 0 auto;
+  width: 85px;
+  display: block;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.base-theme.landing {
+  margin: 0;
+}
+
+.base-theme .hero {
+  background: #3DC827;
+  height: 250px;
+  color: #fff;
+  font-size: 35px;
+}
+
+.base-theme .fb-slogan {
+  font-size: 35px;
+}
+
+.base-theme .main-box.profile {
+  position: relative;
+}
+
+.base-theme .profile-user-identity {
+  position: relative;
+  top: 12px;
+  z-index: 999;
+  letter-spacing: 0.3px;
+  margin: auto;
+  font-optical-sizing: auto;
+  font-size: 11px;
+  font-style: normal;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+}
+
+.base-theme .profile-name {
+  position: relative;
+  top: 22px;
+  z-index: 999;
+  letter-spacing: 1px;
+  margin: auto;
+  padding: 18px 0 0 0;
+  font-family: "bookmania", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-optical-sizing: auto;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+}
+
+.base-theme .profile-image {
+  position: relative;
+  display: block;
+  margin: -10px auto 25px auto;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.base-theme .profile-image img {
+  display: inline;
+  margin: 0 auto;
+  height: auto;
+  width: 100%;
+}
+
+.base-theme .about-description {
+  font-size: 16px;
+  height: 209px;
+}
+
+.base-theme .about-description div {
+	white-space: pre-line;
+}
+
+.base-theme .website .ant-input-group-addon {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  color: #000000;
+}
+
+.base-theme .nav-pills {
+  border-bottom: 1px solid #ffffff;
+}
+
+.base-theme .nav-pills > li {
+  margin-bottom: 0;
+}
+
+.base-theme .tabs-wrapper .tab-content {
+  padding: 0;
+}
+
+.base-theme .nav-pills {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+  
+.base-theme .tabs-wrapper .nav-link.active {
+  background: #000000;
+  padding: 8px 18px;
+  margin: 0 17px 0 0;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.base-theme .tabs-wrapper .nav-link {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px 18px;
+  margin: 0 17px 0 0;
+  font-size: 16px;
+  color: #000000;
+  cursor: pointer;
+  border-radius: 4px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.base-theme .post-container hr {
+  border-top: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.base-theme .post-container {
+  margin: 0 35px 0 0;
+  overflow: auto;
+}
+
+.base-theme .post-body {
+  padding: 0 25px 0 0;
+  white-space: pre-line;
+  font-size: 16px;
+  line-height: 29px;
+}
+
+.base-theme .side-text {
+  font-size: 16px;
+  padding: 10px 0;
+}
+
+.base-theme.show-navbar {
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 767px) {
+  .base-theme h3 {
+    width: 150px;
+  }
+  .base-theme .main-container {
+    margin-top: 15px;
+  }
+  .base-theme .main-box.profile {
+    width: 100% !important;
+    margin-bottom: 25px !important;
+  }
+  .base-theme .profile-name {
+    width: 80%;
+  }
+  .base-theme .about-description {
+    height: initial;
+  }
+  .base-theme .table-responsive {
+    border: 0;
+  }
+  .base-theme .post-container {
+    height: initial;
+    overflow: initial;
+  }
+}

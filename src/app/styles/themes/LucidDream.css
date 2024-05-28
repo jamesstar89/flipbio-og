@@ -1,0 +1,40 @@
+body.lucid-dream {
+    background: #E2EEEE;
+}
+
+.lucid-dream .main-box.profile {
+  width: 85%;
+  background: #15396a;
+  margin: 0 auto 0 auto;
+  padding: 35px 0 40px 0;
+  border-radius: 5px;
+}
+
+.lucid-dream .main-box.profile .send-message,
+.lucid-dream .main-box.profile .sign-in {
+  color: rgba(255,255, 255, 0.7);
+  font-size: 15px !important;
+  background: #19437b;
+}
+
+.lucid-dream .main-box.profile .send-message:hover,
+.lucid-dream .main-box.profile .sign-in:hover {
+  color: rgba(255,255, 255, 1);
+}
+
+
+.lucid-dream .website .ant-input-wrapper.ant-input-group .ant-input-group-addon {
+  background: #E2EEEE;
+}
+
+.lucid-dream .website .ant-input.ant-input-lg.ant-input-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-left: 0;
+  border-radius: 0;
+  background: #E2EEEE;
+  color: #000000;
+}
+
+.lucid-dream .camera-background {
+  background: #E2EEEE;
+}

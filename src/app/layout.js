@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { fbdb } from '../common/utils/firebase';
 import {
   ref,
@@ -22,8 +23,9 @@ import './styles/themes/Rosy.css';
 
 // https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns
 
-const setMetaData = async () => {
-  const pathname = '';
+const setMetaData = () => {
+  const pathname = usePathname()
+  console.log(333, pathname);
   const postUrl = `https://share.flipbio.co${pathname}`;
   let path;
   let data;
@@ -31,8 +33,9 @@ const setMetaData = async () => {
   let postId;
   let description;
   let photos;
-  if (pathname) {
+  if (pathname && pathname !== '/') {
     path = pathname.slice(pathname.lastIndexOf('/') , pathname.length).replace('/','');
+    console.log(2222, path)
     data = JSON.parse(atob(path));
     userId = data.userId;
     postId = data.postId;
@@ -41,7 +44,8 @@ const setMetaData = async () => {
   if (userId) {
     const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
     const q = query(postRef, orderByChild('public'), startAt(true, postId), endAt(true, postId));
-    return onValue(q, (snapshot) => {
+    let results;
+    onValue(q, (snapshot) => {
       if (snapshot.val() !== null) {
         const key = Object.keys(snapshot.val())[0];
         const postItem = snapshot.val();
@@ -50,10 +54,12 @@ const setMetaData = async () => {
           photos = postItem[key].photos;
         }
       }
-      return {
-        description
-      }
+      console.log(4444)
+      results = { description }
     });
+    return {
+      description
+    }
   }
   if (!userId) {
     return {
@@ -62,13 +68,14 @@ const setMetaData = async () => {
   }
 }
 
-const getMetaData = (params) => {
-  console.log(123, params)
+const getMetaData = () => {
   const metadata = setMetaData();
+  console.log(77777777, metadata)
+
   return (<>
-    <title>Ghost</title>
-    <meta property="og:title" content="Next.js1235544444777"/>
-    <meta property="og:description" content="FlipBio: Sharing made easy..."/>
+    <title>Ghost123</title>
+    <meta property="og:title" content="Next.js1235544444777123"/>
+    <meta property="og:description" content={metadata.description}/>
     <meta property="og:url" content="https://nextjs.org"/>
     <meta property="og:site_name" content="Next.js"/>
     <meta property="og:locale" content="en_US"/>
@@ -90,20 +97,18 @@ const getMetaData = (params) => {
     <meta name="twitter:image:width" content="1800"/>
     <meta name="twitter:image:height" content="1600"/>
     <meta name="twitter:image:alt" content="My custom alt"/>
-    </>)
+  </>)
 };
 
-export default function RootLayout(props) {
-  console.log(555, props.params)
-  const params = props.params;
+export default function RootLayout({children}) {
   return (
     <>
       <html lang="en">
         <head>
-          {getMetaData(params)}
+          {getMetaData()}
         </head>
         <body className="base-theme lucid-dream">
-          {props.children}
+          {children}
         </body>
       </html>
     </>

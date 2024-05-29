@@ -1,6 +1,4 @@
-'use client'
-
-import { useState, useEffect } from 'react';
+import { headers } from 'next/headers';
 import { fbdb } from '../common/utils/firebase';
 import {
   ref,
@@ -23,12 +21,11 @@ import './styles/themes/Rosy.css';
 
 // https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns
 
-export default function RootLayout({children}) {
-  const [newMetaSchema, setNewMetaSchema] = useState({});
-  const [metatagsLoaded, setMetatagsLoaded] = useState(undefined);
+export default async function RootLayout({children}) {
 
-  const getMetaData = () => {
-    const pathname = window.location.href;
+  const getMetaData = async () => {
+    const headerList = headers();
+    const pathname = headerList.get('x-current-path');
     const postUrl = `https://share.flipbio.co${pathname}`;
     let path;
     let data;
@@ -46,66 +43,62 @@ export default function RootLayout({children}) {
     if (userId) {
       const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
       const q = query(postRef, orderByChild('public'), startAt(true, postId), endAt(true, postId));
-      onValue(q, (snapshot) => {
-        if (snapshot.val() !== null) {
-          const key = Object.keys(snapshot.val())[0];
-          const postItem = snapshot.val();
-          description = postItem[key].body;
+      return await new Promise(resolve => {
+        onValue(q, (snapshot) => {
+          if (snapshot.val() !== null) {
+            const key = Object.keys(snapshot.val())[0];
+            const postItem = snapshot.val();
+            description = postItem[key].body;
+  
+            const newModel = {
+              description,
+              postUrl
+            };
+  
+            if (postItem[key].photos) {
+              photos = postItem[key].photos;
+            }
+  
+            if (Object.keys(photos).length > 0) {
+              const baseUrl = 'https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/';
+              const query = '?alt=media';
+              newModel.photos = `${baseUrl}${encodeURIComponent(photos[Object.keys(photos)[0]])}${query}`;
+            }
 
-          const newModel = Object.assign(newMetaSchema, {
-            description,
-            postUrl
-          });
-
-          if (postItem[key].photos) {
-            photos = postItem[key].photos;
+            resolve(newModel)
           }
-
-          if (Object.keys(photos).length > 0) {
-            const baseUrl = 'https://firebasestorage.googleapis.com/v0/b/flipbio-1712c.appspot.com/o/';
-            const query = '?alt=media';
-            newModel.photos = `${baseUrl}${encodeURIComponent(photos[Object.keys(photos)[0]])}${query}`;
-          }
-
-          setNewMetaSchema(newModel)
-          setMetatagsLoaded(true)
-        }
-      });
+        });
+      })
     }
 
     if (!userId) {
-      setMetatagsLoaded(true)
+      return Promise.resolve({})
     }
   }
 
-  useEffect(() => {
-    if (!metatagsLoaded) {
-      getMetaData();
-    }
-  })
+  const newMetaSchema = await getMetaData();
+  console.log(123, newMetaSchema);
 
   return (
     <>
       <html lang="en">
         <head>
-          {metatagsLoaded && (
-            <>
-              <title>FlipBio: Sharing made easy...</title>
-              <meta property="og:title" content="FlipBio: Sharing made easy..."/>
-              <meta property="og:logo" content="https://www.flipbio.co/flipbio-logo-square.png" />
-              <meta property="og:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
-              <meta property="og:url" content={newMetaSchema && newMetaSchema.postUrl || 'https://flipbio.co'}/>
-              <meta property="og:site_name" content="FlipBio"/>
-              <meta property="og:locale" content="en_US"/>
-              <meta property="og:image" content={newMetaSchema && newMetaSchema.photos || 'https://www.flipbio.co/flipbio-logo-square.png'}/>
-              <meta property="og:image:alt" content="FlipBio: Sharing made easy"/>
-              <meta property="og:type" content="article"/>
-              <meta name="twitter:title" content="FlipBio"/>
-              <meta name="twitter:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
-              <meta name="twitter:image" content={newMetaSchema && newMetaSchema.photos || 'https://www.flipbio.co/flipbio-logo-square.png'}/>
-              <meta name="twitter:image:alt" content="FlipBio: Sharing made easy"/>
-            </>
-          )}
+          <>
+            <title>FlipBio: Sharing made easy...</title>
+            <meta property="og:title" content="FlipBio: Sharing made easy..."/>
+            <meta property="og:logo" content="https://www.flipbio.co/flipbio-logo-square.png" />
+            <meta property="og:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
+            <meta property="og:url" content={newMetaSchema && newMetaSchema.postUrl || 'https://flipbio.co'}/>
+            <meta property="og:site_name" content="FlipBio"/>
+            <meta property="og:locale" content="en_US"/>
+            <meta property="og:image" content={newMetaSchema && newMetaSchema.photos || 'https://www.flipbio.co/flipbio-logo-square.png'}/>
+            <meta property="og:image:alt" content="FlipBio: Sharing made easy"/>
+            <meta property="og:type" content="article"/>
+            <meta name="twitter:title" content="FlipBio"/>
+            <meta name="twitter:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
+            <meta name="twitter:image" content={newMetaSchema && newMetaSchema.photos || 'https://www.flipbio.co/flipbio-logo-square.png'}/>
+            <meta name="twitter:image:alt" content="FlipBio: Sharing made easy"/>
+          </>
         </head>
         <body className="base-theme lucid-dream">
           {children}

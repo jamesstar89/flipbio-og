@@ -24,8 +24,8 @@ import './styles/themes/Rosy.css';
 export default async function RootLayout({children}) {
 
   const getMetaData = async () => {
-    const headerList = await headers();
-    const pathname = await headerList.get('x-current-path');
+    const headerList = headers();
+    const pathname = headerList.get('x-current-path');
     const postUrl = `https://share.flipbio.co${pathname}`;
     let path;
     let data;
@@ -70,15 +70,9 @@ export default async function RootLayout({children}) {
         });
       })
     }
-
-    if (!userId) {
-      console.log('makes it here', pathname)
-      return Promise.resolve({})
-    }
   }
 
   const newMetaSchema = await getMetaData();
-  console.log(123, newMetaSchema);
 
   return (
     <>

@@ -92,6 +92,7 @@ export default function RootLayout({children}) {
             <>
               <title>FlipBio: Sharing made easy...</title>
               <meta property="og:title" content="FlipBio: Sharing made easy..."/>
+              <meta property="og:logo" content="https://www.flipbio.co/flipbio-logo-square.png" />
               <meta property="og:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
               <meta property="og:url" content={newMetaSchema && newMetaSchema.postUrl || 'https://flipbio.co'}/>
               <meta property="og:site_name" content="FlipBio"/>

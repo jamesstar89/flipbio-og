@@ -97,7 +97,6 @@ export default async function RootLayout({children}) {
           </>
         </head>
         <body className="base-theme lucid-dream">
-          <div>{pathname}</div>
           {children}
         </body>
       </html>

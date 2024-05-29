@@ -249,6 +249,18 @@ const Post = () => {
     }
   }
 
+  const getBaseUrl = () => {
+    const pathname = window.location.pathname;
+    let username;
+    if (pathname && pathname.indexOf('/bio') > -1) {
+      username = pathname.split('/');
+      username = username.filter(function(str) {
+        return /\S/.test(str);
+      });
+      return `https://flipbio.co/bio/${username[1]}`;
+    }
+  }
+
   useEffect(() => {
     if (!postLoaded) {
       const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
@@ -295,6 +307,16 @@ const Post = () => {
                 border: '1px solid rgba(23, 42, 58, 0.7)',
                 color: 'rgba(23, 42, 58, 0.7)'
               }}>listen</Button>
+            )}
+            {postLoaded && (
+              <div className="text-center">
+                <a href={getBaseUrl()} target="_blank" style={{
+                  display: 'inline-block',
+                  margin: '15px 0 0 0',
+                  color: 'rgb(33, 37, 41)',
+                  textDecoration: 'none'
+                }}>{getBaseUrl()}</a>
+              </div>
             )}
           </div>
         </div>

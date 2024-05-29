@@ -23,9 +23,10 @@ import './styles/themes/Rosy.css';
 
 export default async function RootLayout({children}) {
 
+  const headerList = headers();
+  const pathname = headerList.get('x-current-path');
+
   const getMetaData = async () => {
-    const headerList = headers();
-    const pathname = headerList.get('x-current-path');
     const postUrl = `https://share.flipbio.co${pathname}`;
     let path;
     let data;
@@ -96,6 +97,7 @@ export default async function RootLayout({children}) {
           </>
         </head>
         <body className="base-theme lucid-dream">
+          <div>{pathname}</div>
           {children}
         </body>
       </html>

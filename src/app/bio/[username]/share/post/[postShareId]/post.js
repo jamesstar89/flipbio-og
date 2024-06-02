@@ -10,14 +10,19 @@ import {
   onValue,
   orderByChild,
   startAt,
-  endAt
+  endAt,
+  get,
+  child
 } from 'firebase/database';
+import moment from 'moment';
 import { Spin, Button } from 'antd';
 import { BIO } from '../../../../../../common/constants';
 
 const Post = () => {
   const [postLoaded, setPostLoaded] = useState(false);
   const [description, setDescription] = useState('');
+  const [dateCreated, setDateCreated] = useState('');
+  const [siteName, setSiteName] = useState('');
   const [photos, setPhotos] = useState(undefined);
   const [audio, setAudio] = useState(undefined);
   const [isPlaying, setIsPlaying] = useState({ id: '', audio: undefined });
@@ -249,7 +254,7 @@ const Post = () => {
     }
   }
 
-  const getBaseUrl = () => {
+  const getUsername = () => {
     const pathname = window.location.pathname;
     let username;
     if (pathname && pathname.indexOf('/bio') > -1) {
@@ -257,9 +262,46 @@ const Post = () => {
       username = username.filter(function(str) {
         return /\S/.test(str);
       });
-      return `https://flipbio.co/bio/${username[1]}`;
+      return username[1];
     }
   }
+
+  const getBaseUrl = () => {
+    const pathname = window.location.pathname;
+    if (pathname && pathname.indexOf('/bio') > -1) {
+      return `https://flipbio.co/bio/${getUsername()}`;
+    }
+  }
+
+  useEffect(() => {
+    const siteUrlRef = ref(fbdb);
+    get(child(siteUrlRef, 'siteUrl')).then((snapshot) => {
+      const result = snapshot.val();
+      if (result) {
+        for (let key in result) {
+          const { url, type, owner } = result[key];
+          if (getUsername() === url) {
+            let profileRef;
+
+            if (type === 'default') {
+              profileRef = ref(fbdb, `${BIO}/${userId}/core/profile`);
+            }
+            if (type === 'pro') {
+              profileRef = ref(fbdb, `pro/${owner}/site/${key}/profile`);
+            }      
+            const q = query(profileRef);
+            if (!q) return;
+            onValue(q, (snapshot) => {
+              const profileResult = snapshot.val();
+              setSiteName(profileResult.siteName)
+            })   
+          }
+        }
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  })
 
   useEffect(() => {
     if (!postLoaded) {
@@ -272,6 +314,7 @@ const Post = () => {
           if (postItem[key].audio) {
             setAudio(postItem[key].audio);
           }
+          setDateCreated(postItem[key].dateCreated);
           setDescription(postItem[key].body);
           if (postItem[key].photos) {
             setPhotos(postItem[key].photos);
@@ -288,11 +331,17 @@ const Post = () => {
         <div className="col-md-12">
           <div className="share-post">
             <h1 style={{
-              margin: '0 0 15px 0'
-            }}>FlipBio</h1>
+              fontSize: '35px',
+              margin: '0 0 35px 0'
+            }}>{siteName}</h1>
+            <div style={{padding: '0 0 15px 0', lineHeight: '24px'}}>
+              {dateCreated && <span className="date">{moment(dateCreated).format('ll')}</span>}
+            </div>
             {postLoaded && (
               <div>
-                <p>
+                <p style={{
+                  margin: '0 0 25px 0'
+                }}>
                   {description}
                 </p>
                 {photos && renderPhotosV2()}
@@ -312,7 +361,7 @@ const Post = () => {
               <div className="text-center">
                 <a href={getBaseUrl()} target="_blank" style={{
                   display: 'inline-block',
-                  margin: '15px 0 0 0',
+                  margin: '10px 0 0 0',
                   color: 'rgb(33, 37, 41)',
                   textDecoration: 'none'
                 }}>{getBaseUrl()}</a>

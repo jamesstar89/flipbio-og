@@ -77,10 +77,11 @@ export default async function RootLayout({children}) {
 
   return (
     <>
-      <html lang="en">
+      <html translate="no">
         <head>
           <>
             <title>FlipBio: Sharing made easy...</title>
+            <meta name="google" content="notranslate"/>
             <meta property="og:title" content="FlipBio: Sharing made easy..."/>
             <meta property="og:logo" content="https://www.flipbio.co/flipbio-logo-square.png" />
             <meta property="og:description" content={newMetaSchema && newMetaSchema.description || 'FlipBio: Sharing made easy...'}/>
@@ -96,7 +97,19 @@ export default async function RootLayout({children}) {
             <meta name="twitter:image:alt" content="FlipBio: Sharing made easy"/>
           </>
         </head>
-        <body className="base-theme lucid-dream">
+        <body className="base-theme light">
+          <nav className="navbar navbar-dark bg-dark">
+            <div className="container-fluid">
+              <div style={{
+                padding: '5px 0'
+              }}>
+                <a className="navbar-brand" style={{
+                  position: 'relative',
+                  top: -1
+                }}>flipbio.co</a>
+              </div>
+            </div>
+          </nav>
           {children}
         </body>
       </html>

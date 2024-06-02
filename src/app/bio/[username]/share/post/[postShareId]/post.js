@@ -22,6 +22,9 @@ const Post = () => {
   const [postLoaded, setPostLoaded] = useState(false);
   const [description, setDescription] = useState('');
   const [dateCreated, setDateCreated] = useState('');
+  const [siteId, setSiteId] = useState(undefined);
+  const [siteOwner, setSiteOwner] = useState(undefined);
+  const [isPro, setIsPro] = useState(undefined);
   const [siteName, setSiteName] = useState('');
   const [photos, setPhotos] = useState(undefined);
   const [audio, setAudio] = useState(undefined);
@@ -126,7 +129,6 @@ const Post = () => {
                 width: '100%',
                 height: '425px',
                 position: 'relative',
-                margin: '0 0 25px 0',
                 borderRadius: '15px',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -293,8 +295,11 @@ const Post = () => {
             if (!q) return;
             onValue(q, (snapshot) => {
               const profileResult = snapshot.val();
-              setSiteName(profileResult.siteName)
-            })   
+              setSiteName(profileResult.siteName);
+              setSiteId(key);
+              setSiteOwner(owner);
+              setIsPro(type);
+            })  
           }
         }
       }
@@ -304,8 +309,17 @@ const Post = () => {
   })
 
   useEffect(() => {
-    if (!postLoaded) {
-      const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
+    if (!postLoaded && isPro) {
+      let postRef;
+
+      if (isPro === 'default') {
+        postRef = ref(fbdb, `${BIO}/${userId}/post/`);
+      }
+      
+      if (isPro === 'pro') {
+        postRef = ref(fbdb, `pro/${siteOwner}/site/${siteId}/post/`);
+      }
+
       const q = query(postRef, orderByChild('public'), startAt(true, postId), endAt(true, postId));
       onValue(q, (snapshot) => {
         if (snapshot.val() !== null) {
@@ -323,7 +337,7 @@ const Post = () => {
         setPostLoaded(true);
       });
     }
-  },[postLoaded]);
+  },[postLoaded, isPro]);
 
   return (
     <div className="container-xxl main-container">
@@ -361,7 +375,7 @@ const Post = () => {
               <div className="text-center">
                 <a href={getBaseUrl()} target="_blank" style={{
                   display: 'inline-block',
-                  margin: '10px 0 0 0',
+                  margin: '10px 0 25px 0',
                   color: 'rgb(33, 37, 41)',
                   textDecoration: 'none'
                 }}>{getBaseUrl()}</a>

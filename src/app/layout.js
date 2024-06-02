@@ -6,7 +6,9 @@ import {
   onValue,
   orderByChild,
   startAt,
-  endAt
+  endAt,
+  get,
+  child
 } from 'firebase/database';
 import { BIO } from '../common/constants';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,6 +28,40 @@ export default async function RootLayout({children}) {
   const headerList = headers();
   const pathname = headerList.get('x-current-path');
 
+  const getUsername = () => {
+    let username;
+    if (pathname && pathname.indexOf('/bio') > -1) {
+      username = pathname.split('/');
+      username = username.filter(function(str) {
+        return /\S/.test(str);
+      });
+      return username[1];
+    }
+  }
+
+  const getSiteProperties = async () => {
+    const siteUrlRef = ref(fbdb);
+    return await new Promise(resolve => {
+      get(child(siteUrlRef, 'siteUrl')).then((snapshot) => {
+        const result = snapshot.val();
+        if (result) {
+          for (let key in result) {
+            const { url, owner, type } = result[key];
+            if (getUsername() === url) {
+              resolve({
+                siteId: key,
+                siteOwner: owner,
+                isPro: type
+              }) 
+            }
+          }
+        }
+        }).catch((error) => {
+          console.error(error);
+        });
+    });
+  }
+
   const getMetaData = async () => {
     const postUrl = `https://share.flipbio.co${pathname}`;
     let path;
@@ -34,15 +70,27 @@ export default async function RootLayout({children}) {
     let postId;
     let description;
     let photos;
+
     if (pathname && pathname.indexOf('/bio') > -1) {
       path = pathname.slice(pathname.lastIndexOf('/') , pathname.length).replace('/','');
       data = JSON.parse(atob(path));
       userId = data.userId;
       postId = data.postId;
     }
+
+    const siteObj = await getSiteProperties();
     
-    if (userId) {
-      const postRef = ref(fbdb, `${BIO}/${userId}/post/`);
+    if (userId && siteObj.isPro) {
+      let postRef;
+
+      if (siteObj.isPro === 'default') {
+        postRef = ref(fbdb, `${BIO}/${userId}/post/`);
+      }
+      
+      if (siteObj.isPro === 'pro') {
+        postRef = ref(fbdb, `pro/${siteObj.siteOwner}/site/${siteObj.siteId}/post/`);
+      }
+
       const q = query(postRef, orderByChild('public'), startAt(true, postId), endAt(true, postId));
       return await new Promise(resolve => {
         onValue(q, (snapshot) => {
